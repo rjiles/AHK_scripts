@@ -16,9 +16,11 @@ try {
 
 Loop
 {
-    startRitual()
-    Sleep 53000
-    repairRitual()
+    RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
+    Sleep 2500
+    ; startRitual()
+    ; Sleep 53000
+    ; repairRitual()
 }
 
 
@@ -90,7 +92,8 @@ startRitual()
     Sleep 1000
     x := rand_gaussian(5, mean:=766)
     y := rand_gaussian(5, mean:=673)
-    HumanMouseMove(x,y,Speed:=0.5)
+    ; HumanMouseMove(x,y,Speed:=0.5)
+    RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -105,7 +108,8 @@ startRitual()
             if ImageSearch(&OutputVarX, &OutputVarY, 0, 0, 985, 825, "*TransBlack *50 .\images\startRitual.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
-                HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
+                ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
+                RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
                 log("Starting ritual!")
                 waiting := false
                 Send "{LButton down}"
@@ -125,7 +129,8 @@ repairRitual()
 {
     x := rand_gaussian(5, mean:=780)
     y := rand_gaussian(5, mean:=277)
-    HumanMouseMove(x,y,Speed:=2)
+    ; HumanMouseMove(x,y,Speed:=2)
+    RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -139,7 +144,8 @@ repairRitual()
             if ImageSearch(&OutputVarX, &OutputVarY, 512, 181, 958, 433, "*TransBlack *50 .\images\repairAll.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
-                HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
+                ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
+                RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
                 log("Repairing!")
                 waiting := false
                 Send "{LButton down}"
@@ -155,23 +161,86 @@ repairRitual()
         }
 }
 
-HumanMouseMove(x,y,Speed:=200)
-{
-    
-	MouseGetPos &x0, &y0
-	r := Random(-2., 2.)
-	xd := x-x0, yd := y-y0
-	z := Sqrt(xd*xd+yd*yd)/Speed
-	xd := xd/z, yd := yd/z
-	x2 := -yd*r/z, y2 := xd*r/z
-	x3 := yd*r/2, y3 := -xd*r/2, z--
-	Loop z
-        {
-            MouseMove x0+=xd+x3+=x2, y0+=yd+y3+=y2, 1
-        }
-		
-	MouseMove x, y, 1
-}
+RandomBezier(XO, YO, XD, YD, O := "" ) {
+    Time := RegExMatch(O, "i)T(\d+)", &M) && (M[1] > 0) ? M[1] : 200
+    RO := InStr(O, "RO")
+    RD := InStr(O, "RD")
+    If !RegExMatch(O, "i)P(\d+)(-(\d+))?", &M)
+       N := 2
+    Else {
+       N := (M[1] < 2) ? 2 : (M[1] > 19) ? 19 : M[1]
+       If (M.Count = 3) {
+          M := (M[3] < 2) ? 2 : (M[3] > 19) ? 19 : M[3]
+          N := Random(N, M)
+       }
+    }
+    OfT := RegExMatch(O, "i)OT(-?\d+)", &M) ? M[1] : 100
+    OfB := RegExMatch(O, "i)OB(-?\d+)", &M) ? M[1] : 100
+    OfL := RegExMatch(O, "i)OL(-?\d+)", &M) ? M[1] : 100
+    OfR := RegExMatch(O, "i)OR(-?\d+)", &M) ? M[1] : 100
+    MouseGetPos(&XM, &YM)
+    If (RO) {
+       XO += XM
+       YO += YM
+    }
+    If (RD) {
+       XD += XM
+       YD += YM
+    }
+    If (XO < XD) {
+       sX := XO - OfL
+       bX := XD + OfR
+    }
+    Else {
+       sX := XD - OfL
+       bX := XO + OfR
+    }
+    If (YO < YD) {
+       sY := YO - OfT
+       bY := YD + OfB
+    }
+    Else {
+       sY := YD - OfT
+       bY := YO + OfB
+    }
+    MX := Map()
+    MX[0] := XO
+    MY := Map()
+    MY[0] := YO
+    Loop (--N) - 1 {
+       MX[A_Index] := Random(sX, bX)
+       MY[A_Index] := Random(sY, bY)
+    }
+    MX[N] := XD
+    MY[N] := YD
+    I := A_TickCount
+    E := I + Time
+    While (A_TickCount < E) {
+       T := (A_TickCount - I) / Time
+       U := 1 - T
+       X := Y := 0
+       Loop (N + 1) {
+          F1 := F2 := F3 := 1
+          Idx := A_Index - 1
+          Loop Idx {
+             F2 *= A_Index
+             F1 *= A_Index
+          }
+          D := N - Idx
+          Loop D {
+             F3 *= A_Index
+             F1 *= A_Index + Idx
+          }
+          M := (F1 / (F2 * F3)) * ((T + 0.000001) ** Idx)*((U - 0.000001) ** D)
+          X += M * MX[Idx]
+          Y += M * MY[Idx]
+       }
+       MouseMove(X, Y, 0)
+       Sleep(1)
+     }
+    MouseMove(MX[N], MY[N], 0)
+    Return (N + 1)
+ }  
 log(text)
 {
     try {

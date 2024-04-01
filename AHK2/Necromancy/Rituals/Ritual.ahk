@@ -17,7 +17,7 @@ try {
 Loop
 {
     WindowChecker()
-    emergencyQuit()   
+    ; emergencyQuit()   
     ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
     ; Sleep 2500
     startRitual()
@@ -89,9 +89,14 @@ rand_gaussian(standard_deviation, mean:=0)
 	Return mean + standard_deviation * Sqrt(-2 * Ln(r1 / max_random)) * Cos(2 * 3.14159265 * (r2 / max_random))
 }
 
-startRitual()
+startRitual(retries:=0)
 {
     WindowChecker()
+    if retries == 6
+        {
+            log("made 6 attempts at startRitual, quiting rs3 and killing script")
+            emergencyQuit()
+        }
     Sleep 1000
     x := rand_gaussian(5, mean:=766)
     y := rand_gaussian(5, mean:=673)
@@ -130,13 +135,20 @@ startRitual()
                 {
                     waiting := false
                     log("Its been 5 seconds and we haven't found the 'start ritual' icon. Exiting.")
+                    retries++
+                    startRitual(retries)
                 }
         }
 }
 
-repairRitual()
+repairRitual(retries:=0)
 {
     WindowChecker()
+    if retries == 6
+        {
+            log("made 6 attempts at repairRitual, quiting rs3 and killing script")
+            emergencyQuit()
+        }
     x := rand_gaussian(5, mean:=780)
     y := rand_gaussian(5, mean:=277)
     ; HumanMouseMove(x,y,Speed:=2)
@@ -172,7 +184,9 @@ repairRitual()
             } else if ElapsedSeconds >= 5
                 {
                     waiting := false
-                    log("Its been 5 seconds and we haven't the repair icon. Exiting.")
+                    log("Its been 5 seconds and we haven't the repair icon. Exiting loop and retrying.")
+                    retries++
+                    repairRitual(retries)
                 }
         }
 }

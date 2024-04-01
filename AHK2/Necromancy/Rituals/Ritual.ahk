@@ -52,6 +52,7 @@ l::
 
             if ImageSearch(&OutputVarX, &OutputVarY, 1737, 603, 1911, 636, "*TransBlack *50 .\images\lootall.png")
             {
+                
                 log("Loot found!")
                 waiting := false
                 Send "{Space down}{Space up}"
@@ -72,6 +73,7 @@ l::
 ; HOTKEY SECTION end
 
 ; FUNCTION SECTION start
+
 ImageSize(file) {
 	imgGui := Gui()
 	img := imgGui.Add("Picture",, file)
@@ -116,14 +118,13 @@ startRitual(retries:=0)
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearch(&OutputVarX, &OutputVarY, 0, 0, 985, 825, "*TransBlack *50 .\images\startRitual.png")
+            if ImageSearchGaussian(&OutputVarX, &OutputVarY, 0, 0, 985, 825, "*TransBlack *50 .\images\startRitual.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
                 MouseGetPos &MouseX, &MouseY
-                ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
                 timingVariable := rand_gaussian(124, mean:=524)
 	            stringInput := "T" . timingVariable . " P1-2"
-                RandomBezier( MouseX, MouseY, OutputVarX+20, OutputVarY+5, O:=stringInput )
+                RandomBezier( MouseX, MouseY, OutputVarX, OutputVarX, O:=stringInput )
                 log("Starting ritual!")
                 waiting := false
                 Send "{LButton down}"
@@ -271,6 +272,39 @@ RandomBezier(XO, YO, XD, YD, O := "" ) {
     MouseMove(MX[N], MY[N], 0)
     Return (N + 1)
  }  
+
+ ImageSearchGaussian(OutputVarX, OutputVarY, Xl, Yl, Xr, Yr, StringInput)
+ {
+    ImageSearch(OutputVarX, OutputVarY, Xl, Yl, Xr, Yr, StringInput)
+    X_Y := ImageSize(StringInput)
+    log("Image size: " X_Y)
+    Xmin := OutputVarX
+    Ymin := OutputVarY
+    Xmax := OutputVarX + X_Y[0]
+    Ymax := OutputVarY + X_Y[1]
+    Xmiddle := (Xmin + Xmax)/2
+    Ymiddle := (Ymin + Ymax)/2
+    Xcoord := rand_gaussian(X_Y[0]/6, mean:=Xmiddle)
+    Ycoord := rand_gaussian(X_Y[1]/6, mean:=Ymiddle)
+    if Xcoord > Xmax
+        {
+            Xcoord := Xmax
+        }
+    else if Xcoord < Xmin 
+        {
+            Xcoord := Xmin
+        }
+    if Ycoord > Ymax
+        {
+            Ycoord := Ymax
+        }
+    else if Xcoord < Ymin 
+        {
+            Ycoord := Ymin
+        }
+    %OutputVarX% := Xcoord
+    %OutputVarY% := Ycoord
+ }
 
 
 WindowChecker()

@@ -16,6 +16,8 @@ try {
 
 Loop
 {
+    WindowChecker()
+    emergencyQuit()   
     ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
     ; Sleep 2500
     startRitual()
@@ -89,6 +91,7 @@ rand_gaussian(standard_deviation, mean:=0)
 
 startRitual()
 {
+    WindowChecker()
     Sleep 1000
     x := rand_gaussian(5, mean:=766)
     y := rand_gaussian(5, mean:=673)
@@ -133,6 +136,7 @@ startRitual()
 
 repairRitual()
 {
+    WindowChecker()
     x := rand_gaussian(5, mean:=780)
     y := rand_gaussian(5, mean:=277)
     ; HumanMouseMove(x,y,Speed:=2)
@@ -253,6 +257,55 @@ RandomBezier(XO, YO, XD, YD, O := "" ) {
     MouseMove(MX[N], MY[N], 0)
     Return (N + 1)
  }  
+
+
+WindowChecker()
+{
+    if not WinExist("A") == "RuneScape"
+        {
+            WinActivate "RuneScape"
+        }
+}
+
+emergencyQuit()
+{
+    Send "{Esc down}"
+    Sleep rand_gaussian(5, mean:=25)
+    Send "{Esc up}"
+    Sleep rand_gaussian(50, mean:=200)
+    waiting := true
+    StartTime := A_TickCount
+    while waiting
+        {
+            EndTime := A_TickCount
+            ElapsedSeconds := (EndTime - StartTime)/1000.0
+
+            if ImageSearch(&OutputVarX, &OutputVarY, 512, 181, 958, 433, "*TransBlack *50 .\images\logout.png")
+            {
+                Sleep rand_gaussian(57, mean:=497)
+                ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
+                MouseGetPos &MouseX, &MouseY
+                timingVariable := rand_gaussian(254, mean:=656)
+	            stringInput := "T" . timingVariable . " P6-9"
+                RandomBezier( MouseX, MouseY, OutputVarX+20, OutputVarY+5, O:=stringInput )
+                log("Repairing!")
+                waiting := false
+                Send "{LButton down}"
+                Sleep rand_gaussian(5, mean:=25)
+                Send "{LButton up}"
+                Sleep rand_gaussian(200, mean:=2010)
+
+            } else if ElapsedSeconds >= 5
+                {
+                    waitingLoot := false
+                    log("Its been 5 seconds and we haven't the logout icon. Exiting.")
+                }
+        }
+    Sleep rand_gaussian(200, mean:=200)
+    WinClose "RuneScape"
+
+}
+ 
 log(text)
 {
     try {

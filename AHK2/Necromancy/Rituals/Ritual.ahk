@@ -100,13 +100,20 @@ startRitual(retries:=0)
             emergencyQuit()
         }
     Sleep 1000
-    x := rand_gaussian(5, mean:=766)
-    y := rand_gaussian(5, mean:=673)
-    ; HumanMouseMove(x,y,Speed:=0.5)
+    Xmin := 744
+    Ymin := 652
+    
+    Xmax := 796
+    Ymax := 697
+    Xmiddle := (Xmin + Xmax)/2
+    Ymiddle := (Ymin + Ymax)/2
+    Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
+    Ycoord := rand_gaussian((Ymax - Ymin)/6, mean:=Ymiddle)
+
     MouseGetPos &MouseX, &MouseY
     timingVariable := rand_gaussian(124, mean:=524)
 	stringInput := "T" . timingVariable . " P5-9"
-    RandomBezier( MouseX, MouseY, x, y, O:=stringInput )
+    RandomBezier( MouseX, MouseY, Xcoord, Ycoord, O:=stringInput )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -124,7 +131,9 @@ startRitual(retries:=0)
                 MouseGetPos &MouseX, &MouseY
                 timingVariable := rand_gaussian(124, mean:=524)
 	            stringInput := "T" . timingVariable . " P1-2"
-                RandomBezier( MouseX, MouseY, OutputVarX, OutputVarX, O:=stringInput )
+                log("Start ritual OutputX/Y: " OutputVarX " " OutputVarY)
+                ; ExitApp
+                RandomBezier( MouseX, MouseY, OutputVarX, OutputVarY, O:=stringInput )
                 log("Starting ritual!")
                 waiting := false
                 Send "{LButton down}"
@@ -154,13 +163,19 @@ repairRitual(retries:=0)
             log("made 6 attempts at repairRitual, quiting rs3 and killing script")
             emergencyQuit()
         }
-    x := rand_gaussian(5, mean:=780)
-    y := rand_gaussian(5, mean:=277)
-    ; HumanMouseMove(x,y,Speed:=2)
+    Xmin := 768
+    Ymin := 248
+    
+    Xmax := 793
+    Ymax := 298
+    Xmiddle := (Xmin + Xmax)/2
+    Ymiddle := (Ymin + Ymax)/2
+    Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
+    Ycoord := rand_gaussian((Ymax - Ymin)/6, mean:=Ymiddle)
     MouseGetPos &MouseX, &MouseY
     timingVariable := rand_gaussian(124, mean:=524)
 	stringInput := "T" . timingVariable . " P5-9"
-    RandomBezier( MouseX, MouseY, x, y, O:=stringInput )
+    RandomBezier( MouseX, MouseY, Xcoord, Ycoord, O:=stringInput )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -284,16 +299,17 @@ RandomBezier(XO, YO, XD, YD, O := "" ) {
     if returnVariable
         {
             X_Y := ImageSize(File)
-            log("Image size: " X_Y[1] " " X_Y[2])
+            log("Image size: " X_Y[1] " " X_Y[2] " \n")
             Xmin := ImageOutputVarX
             Ymin := ImageOutputVarY
-            log("OutputX/Y: " ImageOutputVarX " " ImageOutputVarY)
+            log(" Original OutputX/Y: " ImageOutputVarX " " ImageOutputVarY " \n")
             Xmax := ImageOutputVarX + X_Y[1]
             Ymax := ImageOutputVarY + X_Y[2]
             Xmiddle := (Xmin + Xmax)/2
             Ymiddle := (Ymin + Ymax)/2
-            Xcoord := rand_gaussian(X_Y[1]/6, mean:=Xmiddle)
-            Ycoord := rand_gaussian(X_Y[2]/6, mean:=Ymiddle)
+            Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
+            Ycoord := rand_gaussian((Ymax - Ymin)/6, mean:=Ymiddle)
+            log(" Xmin: " Xmin " Ymin: " Ymin " Xmax: " Xmax " Ymax: " Ymax " \n")
             if Xcoord > Xmax
                 {
                     Xcoord := Xmax
@@ -306,12 +322,13 @@ RandomBezier(XO, YO, XD, YD, O := "" ) {
                 {
                     Ycoord := Ymax
                 }
-            else if Xcoord < Ymin 
+            else if Ycoord < Ymin 
                 {
                     Ycoord := Ymin
                 }
-            OutputVarX := Xcoord
-            OutputVarY := Ycoord
+            OutputVarX := Integer(Floor(Xcoord))
+            OutputVarY := Integer(Floor(Ycoord))
+            log("Modified OutputX/Y: " OutputVarX " " OutputVarY)
         }
     Return returnVariable
  }

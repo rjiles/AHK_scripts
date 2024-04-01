@@ -16,11 +16,11 @@ try {
 
 Loop
 {
-    RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
-    Sleep 2500
-    ; startRitual()
-    ; Sleep 53000
-    ; repairRitual()
+    ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
+    ; Sleep 2500
+    startRitual()
+    Sleep 72000
+    repairRitual()
 }
 
 
@@ -93,7 +93,10 @@ startRitual()
     x := rand_gaussian(5, mean:=766)
     y := rand_gaussian(5, mean:=673)
     ; HumanMouseMove(x,y,Speed:=0.5)
-    RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
+    MouseGetPos &MouseX, &MouseY
+    timingVariable := rand_gaussian(124, mean:=524)
+	stringInput := "T" . timingVariable . " P5-9"
+    RandomBezier( 0, 0, x, y, O:=stringInput )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -108,8 +111,11 @@ startRitual()
             if ImageSearch(&OutputVarX, &OutputVarY, 0, 0, 985, 825, "*TransBlack *50 .\images\startRitual.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
+                MouseGetPos &MouseX, &MouseY
                 ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
-                RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
+                timingVariable := rand_gaussian(124, mean:=524)
+	            stringInput := "T" . timingVariable . " P1-2"
+                RandomBezier( MouseX, MouseY, OutputVarX+20, OutputVarY+5, O:=stringInput )
                 log("Starting ritual!")
                 waiting := false
                 Send "{LButton down}"
@@ -130,7 +136,10 @@ repairRitual()
     x := rand_gaussian(5, mean:=780)
     y := rand_gaussian(5, mean:=277)
     ; HumanMouseMove(x,y,Speed:=2)
-    RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
+    MouseGetPos &MouseX, &MouseY
+    timingVariable := rand_gaussian(124, mean:=524)
+	stringInput := "T" . timingVariable . " P5-9"
+    RandomBezier( 0, 0, x, y, O:=stringInput )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -145,7 +154,10 @@ repairRitual()
             {
                 Sleep rand_gaussian(57, mean:=497)
                 ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
-                RandomBezier( 0, 0, x, y, O:="T600 P3-6" )
+                MouseGetPos &MouseX, &MouseY
+                timingVariable := rand_gaussian(101, mean:=454)
+	            stringInput := "T" . timingVariable . " P1-2"
+                RandomBezier( MouseX, MouseY, OutputVarX+20, OutputVarY+5, O:=stringInput )
                 log("Repairing!")
                 waiting := false
                 Send "{LButton down}"

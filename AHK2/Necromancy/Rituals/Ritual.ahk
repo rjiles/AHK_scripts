@@ -43,9 +43,9 @@ Pause::
 l::
 {
     Send "{; down}{; up}"
-    waitingLoot := true
+    waiting := true
     StartTime := A_TickCount
-    while waitingLoot
+    while waiting
         {
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
@@ -53,16 +53,16 @@ l::
             if ImageSearch(&OutputVarX, &OutputVarY, 1737, 603, 1911, 636, "*TransBlack *50 .\images\lootall.png")
             {
                 log("Loot found!")
-                waitingLoot := false
+                waiting := false
                 Send "{Space down}{Space up}"
                 Send "{Esc down}{Esc up}"
             } else if ImageSearch(&OutputVarX, &OutputVarY, 198, 941, 399, 1007, "*TransBlack *50 .\images\noloottrans.png")
             {
                 log("Not enough loot for area loot.")
-                waitingLoot := false
+                waiting := false
             } else if ElapsedSeconds >= 2
                 {
-                    waitingLoot := false
+                    waiting := false
                     log("Its been 2 seconds and we haven't detected loot or no loot popups. Exiting.")
                 }
         }
@@ -128,7 +128,7 @@ startRitual()
 
             } else if ElapsedSeconds >= 5
                 {
-                    waitingLoot := false
+                    waiting := false
                     log("Its been 5 seconds and we haven't found the 'start ritual' icon. Exiting.")
                 }
         }
@@ -171,7 +171,7 @@ repairRitual()
 
             } else if ElapsedSeconds >= 5
                 {
-                    waitingLoot := false
+                    waiting := false
                     log("Its been 5 seconds and we haven't the repair icon. Exiting.")
                 }
         }
@@ -280,7 +280,7 @@ emergencyQuit()
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearch(&OutputVarX, &OutputVarY, 512, 181, 958, 433, "*TransBlack *50 .\images\logout.png")
+            if ImageSearch(&OutputVarX, &OutputVarY, 932, 600, 1220, 670, "*TransBlack *50 .\images\logout.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
                 ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
@@ -297,13 +297,15 @@ emergencyQuit()
 
             } else if ElapsedSeconds >= 5
                 {
-                    waitingLoot := false
+                    waiting := false
                     log("Its been 5 seconds and we haven't the logout icon. Exiting.")
                 }
         }
-    Sleep rand_gaussian(200, mean:=200)
+    ; Sleep rand_gaussian(2, mean:=200)
+    log("Closing RuneScape.")
     WinClose "RuneScape"
-
+    ExitApp
+    Return
 }
  
 log(text)

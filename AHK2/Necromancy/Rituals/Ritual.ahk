@@ -292,8 +292,8 @@ RandomBezier(XO, YO, XD, YD, O := "" ) {
             Ymax := ImageOutputVarY + X_Y[2]
             Xmiddle := (Xmin + Xmax)/2
             Ymiddle := (Ymin + Ymax)/2
-            Xcoord := rand_gaussian(%X_Y[1]%/6, mean:=Xmiddle)
-            Ycoord := rand_gaussian(%X_Y[2]%/6, mean:=Ymiddle)
+            Xcoord := rand_gaussian(X_Y[1]/6, mean:=Xmiddle)
+            Ycoord := rand_gaussian(X_Y[2]/6, mean:=Ymiddle)
             if Xcoord > Xmax
                 {
                     Xcoord := Xmax

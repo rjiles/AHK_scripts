@@ -134,7 +134,7 @@ startRitual(retries:=0)
             } else if ElapsedSeconds >= 5
                 {
                     waiting := false
-                    log("Its been 5 seconds and we haven't found the 'start ritual' icon. Exiting.")
+                    log("Its been 5 seconds and we haven't found the 'start ritual' icon. Exiting loop and retrying")
                     retries++
                     startRitual(retries)
                 }
@@ -312,7 +312,7 @@ emergencyQuit()
             } else if ElapsedSeconds >= 5
                 {
                     waiting := false
-                    log("Its been 5 seconds and we haven't the logout icon. Exiting.")
+                    log("Its been 5 seconds and we haven't the logout icon. Exiting loop.")
                 }
         }
     ; Sleep rand_gaussian(2, mean:=200)

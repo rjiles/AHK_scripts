@@ -106,7 +106,7 @@ startRitual(retries:=0)
     MouseGetPos &MouseX, &MouseY
     timingVariable := rand_gaussian(124, mean:=524)
 	stringInput := "T" . timingVariable . " P5-9"
-    RandomBezier( 0, 0, x, y, O:=stringInput )
+    RandomBezier( MouseX, MouseY, x, y, O:=stringInput )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -118,7 +118,7 @@ startRitual(retries:=0)
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearchGaussian(&OutputVarX, &OutputVarY, 0, 0, 985, 825, "*TransBlack *50 .\images\startRitual.png")
+            if ImageSearchGaussian(&OutputVarX, &OutputVarY, 0, 0, 985, 825, "*TransBlack *50", ".\images\startRitual.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
                 MouseGetPos &MouseX, &MouseY
@@ -137,6 +137,10 @@ startRitual(retries:=0)
                     waiting := false
                     log("Its been 5 seconds and we haven't found the 'start ritual' icon. Exiting loop and retrying")
                     retries++
+                    MouseGetPos &MouseX, &MouseY
+                    timingVariable := rand_gaussian(124, mean:=200)
+	                stringInput := "T" . timingVariable . " P5-9"
+                    RandomBezier( MouseX, MouseY, MouseX-rand_gaussian(20, mean:=100), MouseY-rand_gaussian(20, mean:=100), O:=stringInput )
                     startRitual(retries)
                 }
         }
@@ -156,7 +160,7 @@ repairRitual(retries:=0)
     MouseGetPos &MouseX, &MouseY
     timingVariable := rand_gaussian(124, mean:=524)
 	stringInput := "T" . timingVariable . " P5-9"
-    RandomBezier( 0, 0, x, y, O:=stringInput )
+    RandomBezier( MouseX, MouseY, x, y, O:=stringInput )
     Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
     Send "{RButton up}"
@@ -273,37 +277,43 @@ RandomBezier(XO, YO, XD, YD, O := "" ) {
     Return (N + 1)
  }  
 
- ImageSearchGaussian(OutputVarX, OutputVarY, Xl, Yl, Xr, Yr, StringInput)
+ ImageSearchGaussian(&OutputVarX, &OutputVarY, Xl, Yl, Xr, Yr, StringInput, File)
  {
-    ImageSearch(OutputVarX, OutputVarY, Xl, Yl, Xr, Yr, StringInput)
-    X_Y := ImageSize(StringInput)
-    log("Image size: " X_Y)
-    Xmin := OutputVarX
-    Ymin := OutputVarY
-    Xmax := OutputVarX + X_Y[0]
-    Ymax := OutputVarY + X_Y[1]
-    Xmiddle := (Xmin + Xmax)/2
-    Ymiddle := (Ymin + Ymax)/2
-    Xcoord := rand_gaussian(X_Y[0]/6, mean:=Xmiddle)
-    Ycoord := rand_gaussian(X_Y[1]/6, mean:=Ymiddle)
-    if Xcoord > Xmax
+    StringInput := StringInput " " File
+    returnVariable := ImageSearch(&ImageOutputVarX, &ImageOutputVarY, Xl, Yl, Xr, Yr, StringInput)
+    if returnVariable
         {
-            Xcoord := Xmax
+            X_Y := ImageSize(File)
+            log("Image size: " X_Y[1] " " X_Y[2])
+            Xmin := ImageOutputVarX
+            Ymin := ImageOutputVarY
+            log("OutputX/Y: " ImageOutputVarX " " ImageOutputVarY)
+            Xmax := ImageOutputVarX + X_Y[1]
+            Ymax := ImageOutputVarY + X_Y[2]
+            Xmiddle := (Xmin + Xmax)/2
+            Ymiddle := (Ymin + Ymax)/2
+            Xcoord := rand_gaussian(%X_Y[1]%/6, mean:=Xmiddle)
+            Ycoord := rand_gaussian(%X_Y[2]%/6, mean:=Ymiddle)
+            if Xcoord > Xmax
+                {
+                    Xcoord := Xmax
+                }
+            else if Xcoord < Xmin 
+                {
+                    Xcoord := Xmin
+                }
+            if Ycoord > Ymax
+                {
+                    Ycoord := Ymax
+                }
+            else if Xcoord < Ymin 
+                {
+                    Ycoord := Ymin
+                }
+            OutputVarX := Xcoord
+            OutputVarY := Ycoord
         }
-    else if Xcoord < Xmin 
-        {
-            Xcoord := Xmin
-        }
-    if Ycoord > Ymax
-        {
-            Ycoord := Ymax
-        }
-    else if Xcoord < Ymin 
-        {
-            Ycoord := Ymin
-        }
-    %OutputVarX% := Xcoord
-    %OutputVarY% := Ycoord
+    Return returnVariable
  }
 
 

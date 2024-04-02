@@ -355,7 +355,7 @@ emergencyQuit()
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearch(&OutputVarX, &OutputVarY, 932, 600, 1220, 670, "*TransBlack *50 .\images\logout.png")
+            if ImageSearch(&OutputVarX, &OutputVarY, 779, 507, 1000, 532, "*TransBlack *50 .\images\logout.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
                 ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
@@ -377,6 +377,7 @@ emergencyQuit()
                 }
         }
     ; Sleep rand_gaussian(2, mean:=200)
+    Sleep 1000
     log("Closing RuneScape.")
     WinClose "RuneScape"
     ExitApp

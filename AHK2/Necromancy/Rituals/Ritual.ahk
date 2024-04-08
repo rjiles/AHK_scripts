@@ -21,7 +21,7 @@ Loop
     ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
     ; Sleep 2500
     startRitual()
-    Sleep 72000
+    Sleep 102000
     repairRitual()
 }
 

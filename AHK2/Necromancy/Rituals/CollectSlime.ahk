@@ -99,7 +99,7 @@ collectSlime(retries:=0)
             log("made 6 attempts at startRitual, quiting rs3 and killing script")
             emergencyQuit()
         }
-    Sleep 1000
+    Sleep 50
     Xmin := 712
     Ymin := 441
     
@@ -118,7 +118,7 @@ collectSlime(retries:=0)
     Sleep rand_gaussian(5, mean:=20)
     Send "{LButton up}"
     Sleep rand_gaussian(57, mean:=497)
-    Sleep 30000
+    Sleep 35000
 }
 
 selectSlime(retries:=0)
@@ -150,7 +150,7 @@ selectSlime(retries:=0)
                 Send "{LButton down}"
                 Sleep rand_gaussian(5, mean:=25)
                 Send "{LButton up}"
-                Sleep rand_gaussian(200, mean:=2010)
+                Sleep rand_gaussian(200, mean:=201)
 
             } else if ElapsedSeconds >= 5
                 {
@@ -191,7 +191,7 @@ noteSlime(retries:=0)
                 Send "{LButton down}"
                 Sleep rand_gaussian(5, mean:=25)
                 Send "{LButton up}"
-                Sleep rand_gaussian(200, mean:=2010)
+                Sleep rand_gaussian(200, mean:=201)
 
             } else if ElapsedSeconds >= 5
                 {

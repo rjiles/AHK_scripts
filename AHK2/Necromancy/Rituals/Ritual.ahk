@@ -22,6 +22,8 @@ Loop
     ; Sleep 2500
     startRitual()
     Sleep 102000
+    ; 102000 for ectoplasm ritual
+    ; 70000 for greater communion
     repairRitual()
 }
 
@@ -151,6 +153,29 @@ startRitual(retries:=0)
 	                stringInput := "T" . timingVariable . " P5-9"
                     RandomBezier( MouseX, MouseY, MouseX-rand_gaussian(20, mean:=100), MouseY-rand_gaussian(20, mean:=100), O:=stringInput )
                     startRitual(retries)
+                }
+        }
+}
+
+ritualComplete(retries:=0)
+{
+    waiting := true
+    StartTime := A_TickCount
+    while waiting
+        {
+            EndTime := A_TickCount
+            ElapsedSeconds := (EndTime - StartTime)/1000.0
+
+            if ImageSearch(&OutputVarX, &OutputVarY, 512, 181, 958, 433, "*TransBlack *50 .\images\repairAll.png")
+            {
+                Sleep rand_gaussian(200, mean:=200)
+
+            } else if ElapsedSeconds >= 180
+                {
+                    waiting := false
+                    log("Its been 5 seconds and we haven't the repair icon. Exiting loop and retrying.")
+                    retries++
+                    repairRitual(retries)
                 }
         }
 }

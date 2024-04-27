@@ -21,7 +21,9 @@ Loop
     ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
     ; Sleep 2500
     startRitual()
-    Sleep 102000
+    didRitualStart()
+    ritualComplete()
+    ; Sleep 70000
     ; 102000 for ectoplasm ritual
     ; 70000 for greater communion
     repairRitual()
@@ -159,6 +161,12 @@ startRitual(retries:=0)
 
 ritualComplete(retries:=0)
 {
+    WindowChecker()
+    if retries == 3
+        {
+            log("made 3 attempts at ritualComplete(), quiting rs3 and killing script")
+            emergencyQuit()
+        }
     waiting := true
     StartTime := A_TickCount
     while waiting
@@ -166,16 +174,47 @@ ritualComplete(retries:=0)
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearch(&OutputVarX, &OutputVarY, 512, 181, 958, 433, "*TransBlack *50 .\images\repairAll.png")
+            if ImageSearch(&OutputVarX, &OutputVarY, 594, 0, 993, 50, " *50 .\images\ritualComplete.png")
             {
-                Sleep rand_gaussian(200, mean:=200)
+                log("Ritual has started!")
+                waiting := false
 
-            } else if ElapsedSeconds >= 180
+            } else if ElapsedSeconds >= 360
                 {
                     waiting := false
-                    log("Its been 5 seconds and we haven't the repair icon. Exiting loop and retrying.")
+                    log("Its been 360 seconds and we haven't found the ritual countdown bar. Exiting loop and retrying.")
                     retries++
-                    repairRitual(retries)
+                    ritualComplete(retries)
+                }
+        }
+}
+
+didRitualStart(retries:=0)
+{
+    WindowChecker()
+    if retries == 6
+        {
+            log("made 6 attempts at didRitualStart(), quiting rs3 and killing script")
+            emergencyQuit()
+        }
+    waiting := true
+    StartTime := A_TickCount
+    while waiting
+        {
+            EndTime := A_TickCount
+            ElapsedSeconds := (EndTime - StartTime)/1000.0
+
+            if ImageSearch(&OutputVarX, &OutputVarY, 594, 0, 807, 50, " *50 .\images\ritualCountdown.png")
+            {
+                log("Ritual has started!")
+                waiting := false
+
+            } else if ElapsedSeconds >= 5
+                {
+                    waiting := false
+                    log("Its been 5 seconds and we haven't found the ritual countdown bar. Exiting loop and retrying.")
+                    retries++
+                    didRitualStart(retries)
                 }
         }
 }

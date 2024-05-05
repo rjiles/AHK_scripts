@@ -176,7 +176,7 @@ ritualComplete(retries:=0)
 
             if ImageSearch(&OutputVarX, &OutputVarY, 594, 0, 993, 50, " *50 .\images\ritualComplete.png")
             {
-                log("Ritual has started!")
+                log("Ritual complete!")
                 waiting := false
 
             } else if ElapsedSeconds >= 360

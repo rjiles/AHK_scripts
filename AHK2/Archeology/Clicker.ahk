@@ -20,9 +20,8 @@ Loop
     ; emergencyQuit()   
     ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
     ; Sleep 2500
-    collectSlime()
-    selectSlime()
-    noteSlime()
+    clicker()
+    Sleep rand_gaussian(5000, mean:=60000)
 }
 
 
@@ -91,20 +90,20 @@ rand_gaussian(standard_deviation, mean:=0)
 	Return mean + standard_deviation * Sqrt(-2 * Ln(r1 / max_random)) * Cos(2 * 3.14159265 * (r2 / max_random))
 }
 
-collectSlime(retries:=0)
+clicker(retries:=0)
 {
     WindowChecker()
     if retries == 6
         {
-            log("made 6 attempts at startRitual, quiting rs3 and killing script")
+            log("made 6 attempts at clicker, quiting rs3 and killing script")
             emergencyQuit()
         }
-    Sleep 50
-    Xmin := 712
-    Ymin := 441
+    Sleep 1000
+    Xmin := 819
+    Ymin := 427
     
-    Xmax := 739
-    Ymax := 455
+    Xmax := 844
+    Ymax := 446
     Xmiddle := (Xmin + Xmax)/2
     Ymiddle := (Ymin + Ymax)/2
     Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
@@ -118,18 +117,16 @@ collectSlime(retries:=0)
     Sleep rand_gaussian(5, mean:=20)
     Send "{LButton up}"
     Sleep rand_gaussian(57, mean:=497)
-    Sleep 33000
 }
 
-selectSlime(retries:=0)
+ritualComplete(retries:=0)
 {
     WindowChecker()
-    if retries == 6
+    if retries == 3
         {
-            log("made 6 attempts at repairRitual, quiting rs3 and killing script")
+            log("made 3 attempts at ritualComplete(), quiting rs3 and killing script")
             emergencyQuit()
         }
-    
     waiting := true
     StartTime := A_TickCount
     while waiting
@@ -137,40 +134,29 @@ selectSlime(retries:=0)
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearch(&OutputVarX, &OutputVarY, 1544, 664, 1757, 943, "*TransBlack *50 .\images\slime.png")
+            if ImageSearch(&OutputVarX, &OutputVarY, 594, 0, 993, 50, " *50 .\images\ritualComplete.png")
             {
-                Sleep rand_gaussian(57, mean:=497)
-                ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
-                MouseGetPos &MouseX, &MouseY
-                timingVariable := rand_gaussian(101, mean:=454)
-	            stringInput := "T" . timingVariable . " P1-2"
-                RandomBezier( MouseX, MouseY, OutputVarX+20, OutputVarY+5, O:=stringInput )
-                log("Repairing!")
+                log("Ritual complete!")
                 waiting := false
-                Send "{LButton down}"
-                Sleep rand_gaussian(5, mean:=25)
-                Send "{LButton up}"
-                Sleep rand_gaussian(200, mean:=201)
 
-            } else if ElapsedSeconds >= 5
+            } else if ElapsedSeconds >= 360
                 {
                     waiting := false
-                    log("Its been 5 seconds and we haven't found a bucket of slime. Exiting loop and retrying.")
+                    log("Its been 360 seconds and we haven't found the ritual countdown bar. Exiting loop and retrying.")
                     retries++
-                    selectSlime(retries)
+                    ritualComplete(retries)
                 }
         }
 }
 
-noteSlime(retries:=0)
+didRitualStart(retries:=0)
 {
     WindowChecker()
     if retries == 6
         {
-            log("made 6 attempts at repairRitual, quiting rs3 and killing script")
+            log("made 6 attempts at didRitualStart(), quiting rs3 and killing script")
             emergencyQuit()
         }
-    
     waiting := true
     StartTime := A_TickCount
     while waiting
@@ -178,7 +164,53 @@ noteSlime(retries:=0)
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearch(&OutputVarX, &OutputVarY, 1544, 664, 1757, 943, "*TransBlack *50 .\images\magicNotepaper.png")
+            if ImageSearch(&OutputVarX, &OutputVarY, 594, 0, 807, 50, " *50 .\images\ritualCountdown.png")
+            {
+                log("Ritual has started!")
+                waiting := false
+
+            } else if ElapsedSeconds >= 5
+                {
+                    waiting := false
+                    log("Its been 5 seconds and we haven't found the ritual countdown bar. Exiting loop and retrying.")
+                    retries++
+                    didRitualStart(retries)
+                }
+        }
+}
+
+repairRitual(retries:=0)
+{
+    WindowChecker()
+    if retries == 6
+        {
+            log("made 6 attempts at repairRitual, quiting rs3 and killing script")
+            emergencyQuit()
+        }
+    Xmin := 768
+    Ymin := 248
+    
+    Xmax := 793
+    Ymax := 298
+    Xmiddle := (Xmin + Xmax)/2
+    Ymiddle := (Ymin + Ymax)/2
+    Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
+    Ycoord := rand_gaussian((Ymax - Ymin)/6, mean:=Ymiddle)
+    MouseGetPos &MouseX, &MouseY
+    timingVariable := rand_gaussian(124, mean:=524)
+	stringInput := "T" . timingVariable . " P5-9"
+    RandomBezier( MouseX, MouseY, Xcoord, Ycoord, O:=stringInput )
+    Send "{RButton down}"
+    Sleep rand_gaussian(5, mean:=20)
+    Send "{RButton up}"
+    waiting := true
+    StartTime := A_TickCount
+    while waiting
+        {
+            EndTime := A_TickCount
+            ElapsedSeconds := (EndTime - StartTime)/1000.0
+
+            if ImageSearch(&OutputVarX, &OutputVarY, 512, 181, 958, 433, "*TransBlack *50 .\images\repairAll.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
                 ; HumanMouseMove(OutputVarX+20,OutputVarY+5,Speed:=2)
@@ -191,14 +223,14 @@ noteSlime(retries:=0)
                 Send "{LButton down}"
                 Sleep rand_gaussian(5, mean:=25)
                 Send "{LButton up}"
-                Sleep rand_gaussian(200, mean:=201)
+                Sleep rand_gaussian(200, mean:=2010)
 
             } else if ElapsedSeconds >= 5
                 {
                     waiting := false
-                    log("Its been 5 seconds and we haven't found magic notepaper. Exiting loop and retrying.")
+                    log("Its been 5 seconds and we haven't the repair icon. Exiting loop and retrying.")
                     retries++
-                    noteSlime(retries)
+                    repairRitual(retries)
                 }
         }
 }

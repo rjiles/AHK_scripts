@@ -118,7 +118,7 @@ collectSlime(retries:=0)
     Sleep rand_gaussian(5, mean:=20)
     Send "{LButton up}"
     Sleep rand_gaussian(57, mean:=497)
-    Sleep 33000
+    Sleep 32000
 }
 
 selectSlime(retries:=0)

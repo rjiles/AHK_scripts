@@ -71,6 +71,17 @@ $1::
     Send "{alt down}{y down}{y up}{alt up}" ; equping ring of vigour
 }
 
+; ultimate ability ring of vigour (last slot in action bar)
+#HotIf WinActive("RuneScape")
+$u::
+{
+    Send "{alt down}{u down}{u up}{alt up}" ; equping ring of vigour
+    Sleep 50
+    Send "{1 down}{1 up}" ; equping ring of vigour
+    Sleep 750
+    Send "{alt down}{y down}{y up}{alt up}" ; equping ring of vigour
+}
+
 ; HOTKEY SECTION end
 
 ; FUNCTION SECTION start

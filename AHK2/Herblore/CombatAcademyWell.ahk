@@ -97,11 +97,11 @@ loadLastPreset(retries:=0)
             emergencyQuit()
         }
     Sleep 1000
-    Xmin := 496
-    Ymin := 459
+    Xmin := 760
+    Ymin := 639
     
-    Xmax := 557
-    Ymax := 491
+    Xmax := 841
+    Ymax := 708
     Xmiddle := (Xmin + Xmax)/2
     Ymiddle := (Ymin + Ymax)/2
     Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
@@ -161,10 +161,10 @@ makeAtWell(retries:=0)
         }
     Sleep 1000
     Xmin := 753
-    Ymin := 424
+    Ymin := 380
     
     Xmax := 818
-    Ymax := 442
+    Ymax := 417
     Xmiddle := (Xmin + Xmax)/2
     Ymiddle := (Ymin + Ymax)/2
     Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)

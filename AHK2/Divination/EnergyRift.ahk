@@ -17,8 +17,7 @@ try {
 Loop
 {
     WindowChecker()
-    loadLastPreset()
-    makeAtWell()
+    energyRift()
     finishedMaking()
 }
 
@@ -151,20 +150,78 @@ loadLastPreset(retries:=0)
         }
 }
 
-makeAtWell(retries:=0)
+; energyRift(retries:=0)
+; {
+;     WindowChecker()
+;     if retries == 6
+;         {
+;             log("made 6 attempts at startRitual, quiting rs3 and killing script")
+;             emergencyQuit()
+;         }
+;     Sleep 1000
+;     Xmin := 473-5
+;     Ymin := 553-5
+    
+;     Xmax := 473+5
+;     Ymax := 473+5
+;     Xmiddle := (Xmin + Xmax)/2
+;     Ymiddle := (Ymin + Ymax)/2
+;     Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
+;     Ycoord := rand_gaussian((Ymax - Ymin)/6, mean:=Ymiddle)
+
+;     MouseGetPos &MouseX, &MouseY
+;     timingVariable := rand_gaussian(124, mean:=524)
+; 	stringInput := "T" . timingVariable . " P5-9"
+;     RandomBezier( MouseX, MouseY, Xcoord, Ycoord, O:=stringInput )
+;     Send "{LButton down}"
+;     Sleep rand_gaussian(5, mean:=20)
+;     Send "{LButton up}"
+;     Sleep rand_gaussian(57, mean:=497)
+;     waiting := true
+;     StartTime := A_TickCount
+;     while waiting
+;         {
+;             EndTime := A_TickCount
+;             ElapsedSeconds := (EndTime - StartTime)/1000.0
+
+;             if ImageSearchGaussian(&OutputVarX, &OutputVarY, 905, 296, 1182, 335, "*TransBlack *50", ".\images\make.png")
+;             {
+;                 Sleep rand_gaussian(57, mean:=497)
+;                 log("Making potions!")
+;                 waiting := false
+;                 Send "{Space down}"
+;                 Sleep rand_gaussian(5, mean:=25)
+;                 Send "{Space up}"
+;                 Sleep rand_gaussian(200, mean:=200)
+
+;             } else if ElapsedSeconds >= 5
+;                 {
+;                     waiting := false
+;                     log("Its been 5 seconds and we haven't found the 'mix' button. Exiting loop and retrying")
+;                     retries++
+;                     MouseGetPos &MouseX, &MouseY
+;                     timingVariable := rand_gaussian(124, mean:=200)
+; 	                stringInput := "T" . timingVariable . " P5-9"
+;                     RandomBezier( MouseX, MouseY, MouseX-rand_gaussian(20, mean:=100), MouseY-rand_gaussian(20, mean:=100), O:=stringInput )
+;                     energyRift(retries)
+;                 }
+;         }
+; }
+
+energyRift(retries:=0)
 {
     WindowChecker()
     if retries == 6
         {
-            log("made 6 attempts at startRitual, quiting rs3 and killing script")
+            log("made 6 attempts at energyRift, quiting rs3 and killing script")
             emergencyQuit()
         }
     Sleep 1000
-    Xmin := 755
-    Ymin := 101
+    Xmin := 432
+    Ymin := 313
     
-    Xmax := 831
-    Ymax := 106
+    Xmax := 560
+    Ymax := 407
     Xmiddle := (Xmin + Xmax)/2
     Ymiddle := (Ymin + Ymax)/2
     Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
@@ -174,9 +231,9 @@ makeAtWell(retries:=0)
     timingVariable := rand_gaussian(124, mean:=524)
 	stringInput := "T" . timingVariable . " P5-9"
     RandomBezier( MouseX, MouseY, Xcoord, Ycoord, O:=stringInput )
-    Send "{LButton down}"
+    Send "{RButton down}"
     Sleep rand_gaussian(5, mean:=20)
-    Send "{LButton up}"
+    Send "{RButton up}"
     Sleep rand_gaussian(57, mean:=497)
     waiting := true
     StartTime := A_TickCount
@@ -185,26 +242,75 @@ makeAtWell(retries:=0)
             EndTime := A_TickCount
             ElapsedSeconds := (EndTime - StartTime)/1000.0
 
-            if ImageSearchGaussian(&OutputVarX, &OutputVarY, 905, 296, 1182, 335, "*TransBlack *50", ".\images\mix.png")
+            if ImageSearchGaussian(&OutputVarX, &OutputVarY, 0, 0, 1000, 1000, "*50", ".\images\convertMemories.png")
             {
                 Sleep rand_gaussian(57, mean:=497)
-                log("Making potions!")
+                MouseGetPos &MouseX, &MouseY
+                timingVariable := rand_gaussian(124, mean:=524)
+	            stringInput := "T" . timingVariable . " P1-2"
+                log("Start ritual OutputX/Y: " OutputVarX " " OutputVarY)
+                ; ExitApp
+                RandomBezier( MouseX, MouseY, OutputVarX, OutputVarY, O:=stringInput )
+                log("Starting ritual!")
                 waiting := false
-                Send "{Space down}"
+                Send "{LButton down}"
                 Sleep rand_gaussian(5, mean:=25)
-                Send "{Space up}"
-                Sleep rand_gaussian(200, mean:=200)
+                Send "{LButton up}"
+                Sleep rand_gaussian(1000, mean:=200)
+                waitingMake := True
+                while waitingMake
+                            {
+                                EndTimeMake := A_TickCount
+                                ElapsedSecondsMake := (EndTime - StartTime)/1000.0
+                    
+                                if ImageSearchGaussian(&OutputVarX, &OutputVarY, 905, 296, 1182, 335, "*TransBlack *50", ".\images\make.png")
+                                {
+                                    Sleep rand_gaussian(57, mean:=497)
+                                    log("Making potions!")
+                                    waitingMake := false
+                                    Send "{Space down}"
+                                    Sleep rand_gaussian(5, mean:=25)
+                                    Send "{Space up}"
+                                    Sleep rand_gaussian(200, mean:=200)
+                    
+                                } else if ElapsedSecondsMake >= 5
+                                    {
+                                        waitingMake := false
+                                        log("Its been 5 seconds and we haven't found the 'make' button. Exiting loop and retrying")
+                                        retries++
+                                        MouseGetPos &MouseX, &MouseY
+                                        timingVariable := rand_gaussian(124, mean:=200)
+                    	                stringInput := "T" . timingVariable . " P5-9"
+                                        RandomBezier( MouseX, MouseY, MouseX-rand_gaussian(20, mean:=100), MouseY-rand_gaussian(20, mean:=100), O:=stringInput )
+                                        energyRift(retries)
+                                    }
+                            }
 
             } else if ElapsedSeconds >= 5
                 {
+                    Xmin := 100
+                    Ymin := 100
+
+                    Xmax := 100
+                    Ymax := 100
+                    Xmiddle := (Xmin + Xmax)/2
+                    Ymiddle := (Ymin + Ymax)/2
+                    Xcoord := rand_gaussian((Xmax - Xmin)/6, mean:=Xmiddle)
+                    Ycoord := rand_gaussian((Ymax - Ymin)/6, mean:=Ymiddle)
+
+                    MouseGetPos &MouseX, &MouseY
+                    timingVariable := rand_gaussian(124, mean:=524)
+                    stringInput := "T" . timingVariable . " P5-9"
+                    RandomBezier( MouseX, MouseY, Xcoord, Ycoord, O:=stringInput )
                     waiting := false
-                    log("Its been 5 seconds and we haven't found the 'mix' button. Exiting loop and retrying")
+
+                    log("Its been 5 seconds and we haven't found the 'convert memories' icon. Exiting loop and retrying")
                     retries++
                     MouseGetPos &MouseX, &MouseY
                     timingVariable := rand_gaussian(124, mean:=200)
 	                stringInput := "T" . timingVariable . " P5-9"
                     RandomBezier( MouseX, MouseY, MouseX-rand_gaussian(20, mean:=100), MouseY-rand_gaussian(20, mean:=100), O:=stringInput )
-                    makeAtWell(retries)
+                    energyRift(retries)
                 }
         }
 }
@@ -229,7 +335,7 @@ finishedMaking(retries:=0)
                 log("Ritual complete!")
                 waiting := false
 
-            } else if ElapsedSeconds >= 30
+            } else if ElapsedSeconds >= 360
                 {
                     waiting := false
                     log("Its been 360 seconds and we haven't found the herblore completion bar. Exiting loop and retrying.")

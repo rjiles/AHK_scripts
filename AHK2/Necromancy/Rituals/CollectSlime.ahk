@@ -15,7 +15,7 @@ try {
 }
 
 oT:=A_TickCount
-hoursToWork:=14
+hoursToWork:=16
 Loop
 {
     timeoutCheck()

@@ -13,9 +13,11 @@ try {
 } catch {
     
 }
-
+oT:=A_TickCount
+hoursToWork:=16
 Loop
 {
+    timeoutCheck()
     WindowChecker()
     ; emergencyQuit()   
     ; RandomBezier( 0, 0, 500, 500, O:="T600 P3-6" )
@@ -93,6 +95,16 @@ rand_gaussian(standard_deviation, mean:=0)
 	r1 := Random(1, max_random) ; 1 to prevent inf error
 	r2 := Random(1, max_random)
 	Return mean + standard_deviation * Sqrt(-2 * Ln(r1 / max_random)) * Cos(2 * 3.14159265 * (r2 / max_random))
+}
+
+timeoutCheck(){
+    nT:=A_TickCount
+    
+    elapsedTime:=(nT-oT)/1000
+    logOutput:= "elapsed time (seconds): " . elapsedTime
+    log(logOutput)
+    If (elapsedTime>(hoursToWork*3600))
+        emergencyQuit()
 }
 
 startRitual(retries:=0)

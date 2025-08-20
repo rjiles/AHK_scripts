@@ -107,6 +107,12 @@ timeoutCheck(){
         emergencyQuit()
 }
 
+
+
+
+
+
+
 startRitual(retries:=0)
 {
     WindowChecker()
